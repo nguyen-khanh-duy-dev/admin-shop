@@ -1,0 +1,16 @@
+# Giữ LF trong repo và cả khi checkout, để khớp với .editorconfig và
+# Prettier (endOfLine: "lf") — nếu không, máy Windows sẽ checkout ra CRLF và
+# `npm run format:check` fail.
+* text=auto eol=lf
+
+# File nhị phân: không đụng vào
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Lockfile: giảm xung đột khi review
+package-lock.json -diff linguist-generated=true
