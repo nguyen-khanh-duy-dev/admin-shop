@@ -9,6 +9,7 @@ import { ProductForm } from './product-form';
 
 describe('ProductForm', () => {
   it('chặn submit và hiện lỗi khi form còn trống', async () => {
+    const user = userEvent.setup({ delay: null });
     const onSubmit = vi.fn();
     renderWithProviders(
       <ProductForm
@@ -19,7 +20,7 @@ describe('ProductForm', () => {
       />,
     );
 
-    await userEvent.click(screen.getByRole('button', { name: 'Thêm sản phẩm' }));
+    await user.click(screen.getByRole('button', { name: 'Thêm sản phẩm' }));
 
     expect(await screen.findByText(/Tên sản phẩm tối thiểu 2 ký tự/)).toBeInTheDocument();
     expect(screen.getByText(/SKU tối thiểu 3 ký tự/)).toBeInTheDocument();
@@ -27,6 +28,7 @@ describe('ProductForm', () => {
   });
 
   it('gọi onSubmit với dữ liệu đã hợp lệ', async () => {
+    const user = userEvent.setup({ delay: null });
     const onSubmit = vi.fn();
     renderWithProviders(
       <ProductForm
@@ -37,7 +39,7 @@ describe('ProductForm', () => {
       />,
     );
 
-    await userEvent.click(screen.getByRole('button', { name: 'Thêm sản phẩm' }));
+    await user.click(screen.getByRole('button', { name: 'Thêm sản phẩm' }));
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledOnce();
@@ -51,6 +53,7 @@ describe('ProductForm', () => {
   });
 
   it('tự chuyển SKU sang chữ in hoa khi người dùng gõ', async () => {
+    const user = userEvent.setup({ delay: null });
     renderWithProviders(
       <ProductForm
         defaultValues={PRODUCT_FORM_DEFAULTS}
@@ -61,7 +64,7 @@ describe('ProductForm', () => {
     );
 
     const skuInput = screen.getByLabelText('SKU');
-    await userEvent.type(skuInput, 'ao-thun-001');
+    await user.type(skuInput, 'ao-thun-001');
 
     expect(skuInput).toHaveValue('AO-THUN-001');
   });

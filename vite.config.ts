@@ -44,6 +44,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    // Test component render qua Radix + React Hook Form, 5s mặc định quá chặt
+    // khi máy đang tải (lượt chạy đầy đủ có thể mất hơn 2 phút).
+    testTimeout: 20_000,
     setupFiles: ['./src/test/setup.ts'],
     // Phải khớp với SUPABASE_URL trong src/test/msw/handlers.ts.
     env: {

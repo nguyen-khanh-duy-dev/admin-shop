@@ -39,6 +39,7 @@ describe('DataTable', () => {
   });
 
   it('hiển thị lỗi kèm nút thử lại', async () => {
+    const user = userEvent.setup({ delay: null });
     const onRetry = vi.fn();
     renderWithProviders(
       <DataTable
@@ -52,11 +53,12 @@ describe('DataTable', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('Mất kết nối');
 
-    await userEvent.click(screen.getByRole('button', { name: 'Thử lại' }));
+    await user.click(screen.getByRole('button', { name: 'Thử lại' }));
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
   it('phân trang: khoá nút Trước ở trang đầu và gọi onPageChange khi bấm Sau', async () => {
+    const user = userEvent.setup({ delay: null });
     const onPageChange = vi.fn();
     renderWithProviders(
       <DataTable
@@ -69,7 +71,7 @@ describe('DataTable', () => {
     expect(screen.getByRole('button', { name: 'Trang trước' })).toBeDisabled();
     expect(screen.getByText(/Hiển thị 1–2 trong 5 bản ghi/)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Trang sau' }));
+    await user.click(screen.getByRole('button', { name: 'Trang sau' }));
     expect(onPageChange).toHaveBeenCalledWith(2);
   });
 
