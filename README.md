@@ -3,6 +3,9 @@
 Dashboard quản lý shop: sản phẩm, đơn hàng, khách hàng. Xây theo kiến trúc
 **feature-based** — mỗi nghiệp vụ là một thư mục tự chứa trong `src/features/`.
 
+**Demo:** https://admin-shop-ruddy.vercel.app — đăng nhập bằng
+[tài khoản dùng thử](#tài-khoản-dùng-thử) bên dưới.
+
 Vite 7 · React 19 · TypeScript strict · Tailwind CSS 4 · shadcn/ui · React Query 5
 · Zustand · Zod 4 · Supabase · Vitest + MSW
 
