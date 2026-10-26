@@ -3,8 +3,51 @@
 Dashboard quản lý shop: sản phẩm, đơn hàng, khách hàng. Xây theo kiến trúc
 **feature-based** — mỗi nghiệp vụ là một thư mục tự chứa trong `src/features/`.
 
+**Demo:** https://admin-shop-ruddy.vercel.app — đăng nhập bằng
+[tài khoản dùng thử](#tài-khoản-dùng-thử) bên dưới.
+
 Vite 7 · React 19 · TypeScript strict · Tailwind CSS 4 · shadcn/ui · React Query 5
 · Zustand · Zod 4 · Supabase · Vitest + MSW
+
+## Tính năng
+
+**Tổng quan**
+
+- Đơn hôm nay, đơn chờ xử lý, sản phẩm đang bán, khách mới, doanh thu hôm nay và trong tháng
+- Đơn hàng gần đây và sản phẩm sắp hết hàng
+
+**Sản phẩm**
+
+- Danh sách có tìm theo tên/SKU, lọc theo danh mục và trạng thái, sắp xếp, phân trang
+- Thêm và sửa sản phẩm bằng form có kiểm tra dữ liệu; xoá (chỉ admin)
+
+**Đơn hàng**
+
+- Danh sách có tìm theo mã đơn, lọc theo trạng thái, sắp xếp, phân trang
+- Trang chi tiết: các dòng hàng, tổng tiền, thông tin khách, link sang trang khách hàng
+- Chuyển trạng thái theo luồng cho phép: chờ xử lý → đang giao → hoàn thành, hoặc huỷ.
+  Đơn đã hoàn thành hay đã huỷ không chuyển tiếp được nữa
+
+**Khách hàng**
+
+- Danh sách có tìm theo tên/email/số điện thoại, lọc theo tỉnh/thành
+- Thêm, sửa trong dialog; xoá (chỉ admin, và không xoá được khách đã có đơn)
+- Trang chi tiết `/khach-hang/:id`: thông tin liên hệ, tổng chi tiêu, số đơn, ngày mua
+  gần nhất và lịch sử đơn hàng. Id không tồn tại thì hiện "Không tìm thấy khách hàng"
+
+**Chung**
+
+- Đăng nhập, phân quyền hai vai trò `admin` và `staff`
+- Bộ lọc, trang và thứ tự sắp xếp lưu trên URL: tải lại hay chia sẻ link vẫn giữ nguyên
+- Đủ 4 trạng thái cho mọi bảng: đang tải, lỗi kèm nút thử lại, trống, có dữ liệu
+- Giao diện sáng/tối, dùng được trên điện thoại
+
+## Tài khoản dùng thử
+
+| Vai trò | Email             | Mật khẩu   | Quyền                                  |
+| ------- | ----------------- | ---------- | -------------------------------------- |
+| Admin   | `admin@gmail.com` | `admin123` | Toàn quyền, kể cả xoá                  |
+| Staff   | `staff@gmail.com` | `staff123` | Xem, thêm, sửa; không xoá được bản ghi |
 
 ## Bắt đầu
 
@@ -30,6 +73,21 @@ supabase db push
 # Cách 2: dán nội dung 2 file sau vào Supabase Dashboard > SQL Editor
 #   supabase/migrations/20261025000000_init_schema.sql
 #   supabase/seed.sql
+```
+
+`seed.sql` tạo sẵn danh mục, sản phẩm, 300 khách hàng và 1.000 đơn hàng mẫu.
+
+### Tạo tài khoản đăng nhập
+
+App không có trang đăng ký. Tạo người dùng trong **Supabase Dashboard >
+Authentication > Users > Add user**; trigger `on_auth_user_created` sẽ tự tạo
+`profiles` với vai trò mặc định là `staff`. Muốn nâng lên admin, chạy trong SQL
+Editor:
+
+```sql
+update public.profiles
+set role = 'admin'
+where id = (select id from auth.users where email = '<email>');
 ```
 
 Sau mỗi lần đổi schema, sinh lại type:
@@ -73,19 +131,19 @@ src/
 │   │   ├── pages/
 │   │   ├── schemas.ts
 │   │   └── store.ts          # Zustand: phiên đăng nhập
-│   ├── dashboard/            # api (số liệu tổng quan), StatCard, RecentOrders, LowStock
+│   ├── dashboard/            # api (số liệu tổng quan), RecentOrders, LowStock
 │   ├── products/
 │   │   ├── api/              # queries.ts, mutations.ts (React Query)
 │   │   ├── components/       # ProductTable, ProductForm, ProductFilters
 │   │   ├── pages/            # ProductListPage, ProductEditPage
 │   │   ├── schemas.ts        # Zod schema dùng chung cho form và type
 │   │   └── types.ts
-│   ├── orders/               # + OrderDetailPage, OrderStatusActions
-│   └── customers/            # + CustomerFormDialog
+│   ├── orders/               # + OrderDetailPage, OrderStatusActions, query đơn theo khách
+│   └── customers/            # + CustomerDetailPage, CustomerFormDialog, CustomerOrderTable
 ├── components/
 │   ├── ui/                   # shadcn/ui (file vendor, sinh bằng CLI)
 │   ├── layout/               # Sidebar, Header, Breadcrumb, AppLayout, nav-config
-│   └── common/               # DataTable, EmptyState, ErrorState, ConfirmDialog, PageHeader
+│   └── common/               # DataTable, StatCard, EmptyState, ErrorState, ConfirmDialog, PageHeader
 ├── hooks/                    # useDebounce, useDebouncedSearch, useUrlFilters, useMediaQuery
 ├── lib/
 │   ├── supabase.ts           # Khởi tạo client (có generic <Database>)
@@ -159,3 +217,5 @@ Registry mới của shadcn import `cn` từ package `cn`; dự án này dùng
   `daily_revenue` trong database thay vì tính tổng ở client như hiện tại.
 - Upload ảnh sản phẩm đang là ô nhập URL; cần nối Supabase Storage.
 - Chưa có trang quản lý danh mục (`categories`) và người dùng (`profiles`).
+- Số liệu ở trang chi tiết khách hàng đang tổng hợp ở client từ mọi đơn của khách.
+  Nếu một khách có rất nhiều đơn, nên chuyển sang một hàm RPC trong database.
