@@ -17,6 +17,7 @@ const ProductEditPage = lazy(() => import('@/features/products/pages/product-edi
 const OrderListPage = lazy(() => import('@/features/orders/pages/order-list-page'));
 const OrderDetailPage = lazy(() => import('@/features/orders/pages/order-detail-page'));
 const CustomerListPage = lazy(() => import('@/features/customers/pages/customer-list-page'));
+const CustomerDetailPage = lazy(() => import('@/features/customers/pages/customer-detail-page'));
 
 const router = createBrowserRouter([
   {
@@ -51,7 +52,10 @@ const router = createBrowserRouter([
           {
             path: 'khach-hang',
             element: <RoleGuard permission="customers.view" />,
-            children: [{ index: true, element: <CustomerListPage /> }],
+            children: [
+              { index: true, element: <CustomerListPage /> },
+              { path: ':id', element: <CustomerDetailPage /> },
+            ],
           },
           { path: '404', element: <NotFoundPage /> },
           { path: '*', element: <Navigate to="/404" replace /> },

@@ -5,4 +5,14 @@ export {
   useUpdateOrder,
   type UpdateOrderInput,
 } from './mutations';
-export { fetchOrder, fetchOrders, orderKeys, useOrderQuery, useOrdersQuery } from './queries';
+export {
+  fetchCustomerOrders,
+  fetchCustomerOrderStats,
+  fetchOrder,
+  fetchOrders,
+  orderKeys,
+  useCustomerOrdersQuery,
+  useCustomerOrderStatsQuery,
+  useOrderQuery,
+  useOrdersQuery,
+} from './queries';

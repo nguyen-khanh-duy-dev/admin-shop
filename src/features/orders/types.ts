@@ -28,6 +28,22 @@ export type OrderListFilters = {
   sortDir: 'asc' | 'desc';
 };
 
+/** Bộ lọc cho bảng lịch sử đơn của một khách hàng. */
+export type CustomerOrderFilters = Pick<
+  OrderListFilters,
+  'page' | 'pageSize' | 'sortBy' | 'sortDir'
+>;
+
+/** Số liệu mua hàng của một khách hàng. */
+export type CustomerOrderStats = {
+  /** Tổng tiền các đơn đã hoàn thành — cùng cách tính doanh thu với dashboard. */
+  totalSpent: number;
+  /** Tổng số đơn, mọi trạng thái. */
+  orderCount: number;
+  /** Ngày đặt đơn gần nhất chưa bị huỷ, null nếu chưa có. */
+  lastOrderAt: string | null;
+};
+
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   pending: 'Chờ xử lý',
   shipping: 'Đang giao',

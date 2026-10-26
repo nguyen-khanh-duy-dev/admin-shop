@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ErrorState } from '@/components/common/error-state';
 import { PageHeader } from '@/components/common/page-header';
@@ -135,7 +135,16 @@ export default function OrderDetailPage() {
               <CardTitle>Khách hàng</CardTitle>
             </CardHeader>
             <CardContent className="space-y-1 text-sm">
-              <p className="font-medium">{order.customer?.full_name ?? '—'}</p>
+              {order.customer ? (
+                <Link
+                  to={`/khach-hang/${String(order.customer.id)}`}
+                  className="font-medium underline-offset-4 hover:underline"
+                >
+                  {order.customer.full_name}
+                </Link>
+              ) : (
+                <p className="font-medium">—</p>
+              )}
               {order.customer?.phone ? (
                 <p className="text-muted-foreground">{order.customer.phone}</p>
               ) : null}
