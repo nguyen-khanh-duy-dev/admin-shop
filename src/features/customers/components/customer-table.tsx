@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { type ColumnDef, type SortingState } from '@tanstack/react-table';
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon, UsersIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import { DataTable, type DataTablePagination } from '@/components/common/data-table';
@@ -59,7 +60,14 @@ export function CustomerTable({
       {
         accessorKey: 'full_name',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Khách hàng" />,
-        cell: ({ row }) => <span className="font-medium">{row.original.full_name}</span>,
+        cell: ({ row }) => (
+          <Link
+            to={`/khach-hang/${String(row.original.id)}`}
+            className="font-medium underline-offset-4 hover:underline"
+          >
+            {row.original.full_name}
+          </Link>
+        ),
       },
       {
         id: 'contact',

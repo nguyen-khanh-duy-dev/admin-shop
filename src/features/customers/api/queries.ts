@@ -49,8 +49,9 @@ export async function fetchCustomers(filters: CustomerListFilters): Promise<Pagi
   };
 }
 
-export async function fetchCustomer(id: number): Promise<Customer> {
-  const { data, error } = await supabase.from('customers').select('*').eq('id', id).single();
+/** Trả về `null` khi không có khách hàng với id này, để trang hiện "không tìm thấy". */
+export async function fetchCustomer(id: number): Promise<Customer | null> {
+  const { data, error } = await supabase.from('customers').select('*').eq('id', id).maybeSingle();
 
   if (error) throw new Error(error.message);
   return data;
@@ -80,6 +81,14 @@ export function useCustomersQuery(filters: CustomerListFilters) {
     queryKey: customerKeys.list(filters),
     queryFn: () => fetchCustomers(filters),
     placeholderData: (previous) => previous,
+  });
+}
+
+export function useCustomerQuery(id: number | null) {
+  return useQuery({
+    queryKey: customerKeys.detail(id ?? 0),
+    queryFn: () => fetchCustomer(id ?? 0),
+    enabled: id !== null,
   });
 }
 

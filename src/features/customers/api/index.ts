@@ -14,5 +14,6 @@ export {
   fetchCustomerCities,
   fetchCustomers,
   useCustomerCitiesQuery,
+  useCustomerQuery,
   useCustomersQuery,
 } from './queries';

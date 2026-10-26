@@ -11,7 +11,7 @@ export type StatCardProps = {
   isLoading?: boolean;
 };
 
-/** Thẻ số liệu trên dashboard. */
+/** Thẻ số liệu: nhãn, giá trị lớn, gợi ý nhỏ và icon. Dùng ở dashboard và trang chi tiết. */
 export function StatCard({ label, value, hint, icon: Icon, isLoading = false }: StatCardProps) {
   return (
     <Card>

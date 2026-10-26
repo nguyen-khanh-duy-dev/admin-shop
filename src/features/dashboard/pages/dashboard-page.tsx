@@ -2,11 +2,12 @@ import { ClockIcon, PackageIcon, TrendingUpIcon, UsersIcon } from 'lucide-react'
 
 import { ErrorState } from '@/components/common/error-state';
 import { PageHeader } from '@/components/common/page-header';
+import { StatCard } from '@/components/common/stat-card';
 import { useAuth } from '@/features/auth/hooks';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 
 import { useDashboardStatsQuery } from '../api';
-import { LowStockCard, RecentOrdersCard, StatCard } from '../components';
+import { LowStockCard, RecentOrdersCard } from '../components';
 
 export default function DashboardPage() {
   const { profile } = useAuth();
