@@ -1,7 +1,9 @@
 import { type LucideIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 export type StatCardProps = {
   label: string;
@@ -9,12 +11,21 @@ export type StatCardProps = {
   hint?: string;
   icon: LucideIcon;
   isLoading?: boolean;
+  /** Truyền vào thì cả thẻ thành link, bấm để xem chi tiết số liệu. */
+  href?: string;
 };
 
 /** Thẻ số liệu: nhãn, giá trị lớn, gợi ý nhỏ và icon. Dùng ở dashboard và trang chi tiết. */
-export function StatCard({ label, value, hint, icon: Icon, isLoading = false }: StatCardProps) {
-  return (
-    <Card>
+export function StatCard({
+  label,
+  value,
+  hint,
+  icon: Icon,
+  isLoading = false,
+  href,
+}: StatCardProps) {
+  const card = (
+    <Card className={cn(href && 'h-full transition-colors hover:bg-muted/50')}>
       <CardContent className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1">
           <p className="text-sm text-muted-foreground">{label}</p>
@@ -30,5 +41,16 @@ export function StatCard({ label, value, hint, icon: Icon, isLoading = false }: 
         </div>
       </CardContent>
     </Card>
+  );
+
+  if (!href) return card;
+
+  return (
+    <Link
+      to={href}
+      className="rounded-xl focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+    >
+      {card}
+    </Link>
   );
 }

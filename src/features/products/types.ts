@@ -13,10 +13,15 @@ export type ProductWithCategory = Product & {
 export const PRODUCT_SORT_FIELDS = ['name', 'price', 'stock', 'created_at'] as const;
 export type ProductSortField = (typeof PRODUCT_SORT_FIELDS)[number];
 
+/** Tồn kho dưới ngưỡng này (không tính bằng) được coi là sắp hết hàng. */
+export const LOW_STOCK_THRESHOLD = 5;
+
 export type ProductListFilters = {
   /** Từ khoá tìm trong tên và SKU. */
   q: string;
   status: ProductStatus | 'all';
+  /** 'low' chỉ lấy sản phẩm có tồn < `LOW_STOCK_THRESHOLD`. */
+  stock: 'all' | 'low';
   /** Id danh mục, hoặc 'all' để bỏ lọc. */
   categoryId: number | 'all';
   page: number;

@@ -6,11 +6,10 @@ import { ErrorState } from '@/components/common/error-state';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { LOW_STOCK_THRESHOLD } from '@/features/products/types';
 import { cn, formatNumber } from '@/lib/utils';
 
 import { useLowStockQuery } from '../api';
-
-const LOW_STOCK_THRESHOLD = 10;
 
 /** Sản phẩm tồn kho thấp, để nhập hàng trước khi hết. */
 export function LowStockCard() {
@@ -21,7 +20,7 @@ export function LowStockCard() {
       <CardHeader className="flex-row items-center justify-between">
         <CardTitle>Sắp hết hàng</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link to="/san-pham?sort=stock&dir=asc">Xem sản phẩm</Link>
+          <Link to="/san-pham?stock=low&status=active&sort=stock&dir=asc">Xem sản phẩm</Link>
         </Button>
       </CardHeader>
       <CardContent>
@@ -41,7 +40,7 @@ export function LowStockCard() {
           <EmptyState
             icon={PackageCheckIcon}
             title="Tồn kho ổn"
-            description={`Không có sản phẩm nào còn dưới ${String(LOW_STOCK_THRESHOLD)} đơn vị.`}
+            description={`Không có sản phẩm đang bán nào còn dưới ${String(LOW_STOCK_THRESHOLD)} đơn vị.`}
             className="py-8"
           />
         ) : (

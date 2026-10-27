@@ -21,6 +21,7 @@ const PAGE_SIZE = 20;
 const DEFAULT_URL_FILTERS = {
   q: '',
   status: 'all',
+  stock: 'all',
   category: 'all',
   page: 1,
   sort: 'created_at',
@@ -41,6 +42,7 @@ export default function ProductListPage() {
   const filters: Filters = {
     q: urlFilters.q,
     status: isProductStatus(urlFilters.status) ? urlFilters.status : 'all',
+    stock: urlFilters.stock === 'low' ? 'low' : 'all',
     categoryId: urlFilters.category === 'all' ? 'all' : Number(urlFilters.category),
     page: urlFilters.page,
     pageSize: PAGE_SIZE,
@@ -54,6 +56,7 @@ export default function ProductListPage() {
     setFilters({
       ...(patch.q !== undefined ? { q: patch.q } : {}),
       ...(patch.status !== undefined ? { status: patch.status } : {}),
+      ...(patch.stock !== undefined ? { stock: patch.stock } : {}),
       ...(patch.categoryId !== undefined ? { category: String(patch.categoryId) } : {}),
     });
   }

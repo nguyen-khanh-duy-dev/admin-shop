@@ -9,6 +9,7 @@ import { fetchProducts } from './queries';
 const baseFilters: ProductListFilters = {
   q: '',
   status: 'all',
+  stock: 'all',
   categoryId: 'all',
   page: 1,
   pageSize: 20,
@@ -45,6 +46,13 @@ describe('fetchProducts', () => {
 
     expect(result.rows).toHaveLength(1);
     expect(result.rows[0]?.status).toBe('draft');
+  });
+
+  it('lọc sản phẩm sắp hết hàng (tồn < 5)', async () => {
+    const result = await fetchProducts({ ...baseFilters, stock: 'low' });
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.sku).toBe('QUAN-JEAN-002');
   });
 
   it('lọc theo danh mục', async () => {

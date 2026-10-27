@@ -1,13 +1,17 @@
-import { ClockIcon, PackageIcon, TrendingUpIcon, UsersIcon } from 'lucide-react';
+import { ClockIcon, PackageIcon, PackageXIcon, TrendingUpIcon, UsersIcon } from 'lucide-react';
 
 import { ErrorState } from '@/components/common/error-state';
 import { PageHeader } from '@/components/common/page-header';
 import { StatCard } from '@/components/common/stat-card';
 import { useAuth } from '@/features/auth/hooks';
+import { LOW_STOCK_THRESHOLD } from '@/features/products/types';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 
 import { useDashboardStatsQuery } from '../api';
-import { LowStockCard, RecentOrdersCard } from '../components';
+import { LowStockCard, RecentOrdersCard, RevenueChartCard } from '../components';
+
+/** Cùng bộ lọc với thẻ đếm: sản phẩm đang bán có tồn < ngưỡng. */
+const LOW_STOCK_HREF = '/san-pham?stock=low&status=active&sort=stock&dir=asc';
 
 export default function DashboardPage() {
   const { profile } = useAuth();
@@ -29,7 +33,7 @@ export default function DashboardPage() {
           onRetry={() => void statsQuery.refetch()}
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <StatCard
             label="Doanh thu hôm nay"
             value={formatCurrency(stats?.revenueToday ?? 0)}
@@ -51,6 +55,14 @@ export default function DashboardPage() {
             isLoading={isLoading}
           />
           <StatCard
+            label="Sắp hết hàng"
+            value={formatNumber(stats?.lowStockProducts ?? 0)}
+            hint={`Đang bán, tồn dưới ${String(LOW_STOCK_THRESHOLD)}`}
+            icon={PackageXIcon}
+            isLoading={isLoading}
+            href={LOW_STOCK_HREF}
+          />
+          <StatCard
             label="Khách hàng mới"
             value={formatNumber(stats?.newCustomers ?? 0)}
             hint="Trong 30 ngày"
@@ -59,6 +71,8 @@ export default function DashboardPage() {
           />
         </div>
       )}
+
+      <RevenueChartCard />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <RecentOrdersCard />
