@@ -17,6 +17,16 @@ export function formatCurrency(value: number, currency = 'VND') {
   }).format(value);
 }
 
+/** 1250000 -> "1,3 Tr ₫" — dùng cho trục biểu đồ, nơi không đủ chỗ cho số đầy đủ. */
+export function formatCompactCurrency(value: number, currency = 'VND') {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency,
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 /** 1250000 -> "1.250.000" (không kèm ký hiệu tiền tệ) */
 export function formatNumber(value: number) {
   return new Intl.NumberFormat('vi-VN').format(value);

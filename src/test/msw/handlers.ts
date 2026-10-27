@@ -95,6 +95,11 @@ export const handlers = [
       rows = rows.filter((product) => product.status === status.slice(3));
     }
 
+    const stock = url.searchParams.get('stock');
+    if (stock?.startsWith('lt.')) {
+      rows = rows.filter((product) => product.stock < Number(stock.slice(3)));
+    }
+
     const categoryId = url.searchParams.get('category_id');
     if (categoryId?.startsWith('eq.')) {
       rows = rows.filter((product) => product.category_id === Number(categoryId.slice(3)));

@@ -13,6 +13,7 @@ import { useDebouncedSearch } from '@/hooks';
 
 import { useCategoriesQuery } from '../api';
 import {
+  LOW_STOCK_THRESHOLD,
   PRODUCT_STATUS_LABELS,
   type ProductListFilters as Filters,
   type ProductStatus,
@@ -65,6 +66,19 @@ export function ProductFilters({ filters, onChange, onReset, isFiltered }: Produ
               {label}
             </SelectItem>
           ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={filters.stock}
+        onValueChange={(value) => onChange({ stock: value === 'low' ? 'low' : 'all' })}
+      >
+        <SelectTrigger className="sm:w-44" aria-label="Lọc theo tồn kho">
+          <SelectValue placeholder="Tồn kho" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Mọi mức tồn</SelectItem>
+          <SelectItem value="low">{`Sắp hết hàng (< ${String(LOW_STOCK_THRESHOLD)})`}</SelectItem>
         </SelectContent>
       </Select>
 

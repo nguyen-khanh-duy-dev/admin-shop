@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import type { Paginated } from '@/types';
 
-import type { Category, Product, ProductListFilters, ProductWithCategory } from '../types';
+import {
+  LOW_STOCK_THRESHOLD,
+  type Category,
+  type Product,
+  type ProductListFilters,
+  type ProductWithCategory,
+} from '../types';
 
 /**
  * Khoá cache theo tầng: huỷ hiệu lực `productKeys.lists()` là làm mới mọi
@@ -31,7 +37,7 @@ function sanitizeSearchTerm(term: string) {
 export async function fetchProducts(
   filters: ProductListFilters,
 ): Promise<Paginated<ProductWithCategory>> {
-  const { q, status, categoryId, page, pageSize, sortBy, sortDir } = filters;
+  const { q, status, stock, categoryId, page, pageSize, sortBy, sortDir } = filters;
   const from = (page - 1) * pageSize;
 
   let query = supabase.from('products').select(PRODUCT_SELECT, { count: 'exact' });
@@ -39,6 +45,7 @@ export async function fetchProducts(
   const keyword = sanitizeSearchTerm(q);
   if (keyword) query = query.or(`name.ilike.%${keyword}%,sku.ilike.%${keyword}%`);
   if (status !== 'all') query = query.eq('status', status);
+  if (stock === 'low') query = query.lt('stock', LOW_STOCK_THRESHOLD);
   if (categoryId !== 'all') query = query.eq('category_id', categoryId);
 
   const { data, error, count } = await query

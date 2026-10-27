@@ -207,6 +207,10 @@ export type Database = {
     };
     Views: Record<never, never>;
     Functions: {
+      daily_revenue: {
+        Args: { p_from: string; p_to: string };
+        Returns: { day: string; revenue: number; orders: number }[];
+      };
       is_admin: {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
